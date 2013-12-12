@@ -1,0 +1,44 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'eu.appsatori:gradle-fatjar-plugin:0.2-rc1'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'fatjar'
+apply plugin: 'idea'
+
+
+fatJar {
+    baseName = "dropwizard-demo"
+    classifier = "standalone"
+    destinationDir = new File("heroku-app")
+
+    exclude("META-INF/*.SF")
+    exclude("META-INF/*.DSA")
+    exclude("META-INF/*.RSA")
+
+    manifest {
+        attributes 'Main-Class': "org.kiwi.dropwizard.HelloService"
+    }
+}
+
+dependencies {
+    repositories {
+        mavenCentral()
+    }
+
+    compile("com.yammer.dropwizard:dropwizard-core:0.6.2")
+}
+
+task copyConfig(type: Copy) {
+    from('src/main/dropwizard-config')
+    into('heroku-app')
+}
+
+task stage(dependsOn: [fatJar, copyConfig]) {
+}

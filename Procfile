@@ -1,0 +1,1 @@
+web: java $JAVA_OPTS -Ddw.http.port=$PORT -Ddw.http.adminPort=$PORT -jar heroku-app/*-standalone.jar server heroku-app/hello.yaml
